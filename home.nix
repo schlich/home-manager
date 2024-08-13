@@ -70,12 +70,21 @@
   };
   programs.nushell = {
     enable = true;
-    extraConfig = 
-    ''
-    $env.config = {
-      show_banner: false
-      edit_mode: vi
-    }
+    extraConfig = ''
+      $env.config = ($env.config | upsert show_banner false)
+      $env.config = ($env.config | upsert edit_mode vi)
+      $env.EDITOR = 'hx'
+      $env.ENV_CONVERSIONS = {
+        "PATH": {
+            from_string: { |s| $s | split row (char esep) | path expand --no-symlink }
+            to_string: { |v| $v | path expand --no-symlink | str join (char esep) }
+        }
+        "Path": {
+            from_string: { |s| $s | split row (char esep) | path expand --no-symlink }
+            to_string: { |v| $v | path expand --no-symlink | str join (char esep) }
+        }
+      }
+
     '';
   };
   programs.helix.enable = true;
