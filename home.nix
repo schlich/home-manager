@@ -13,6 +13,9 @@
     rye
     gh
     nixd
+    sampler
+    jira-cli-go
+    just
     # # It is sometimes useful to fine-tune packages, for example, by applying
     # # overrides. You can do that directly here, just don't forget the
     # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
@@ -60,6 +63,11 @@
   };
 
   programs.home-manager.enable = true;
+  programs.direnv = {
+    enable = true;
+    enableNushellIntegration = true;
+    nix-direnv.enable = true;
+  };
   programs.nushell = {
     enable = true;
     extraConfig = 
@@ -90,10 +98,15 @@
     enable = true;
     enableNushellIntegration = true;
   };
- programs.wezterm.enable = true;
+  programs.wezterm.enable = true;
   programs.carapace = {
     enable = true;
     enableNushellIntegration = true;
+  };
+  programs.keychain = {
+    enable = true;
+    enableNushellIntegration = true;
+    keys = ["jira-cli"];
   };
   home.preferXdgDirectories = true;
   xdg.enable = true;
