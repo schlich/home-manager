@@ -84,29 +84,13 @@
   };
   programs.lazygit = {
     enable = true;
-    settings = {
-      gui.theme = {
-        lightTheme = true;
-        activeBorderColor = [ "blue" "bold" ];
-        inactiveBorderColor = [ "black" ];
-        selectedLineBgColor = [ "default" ];
-      };
-    };
   };
   programs.bat.enable = true;
   programs.zoxide = {
     enable = true;
     enableNushellIntegration = true;
   };
-  programs.kitty = {
-    enable = true;
-    font = {
-      package = pkgs.monaspace;
-      size = 10;
-      name = "Monaspace Neon Var";
-    };
-  };
-  programs.wezterm.enable = true;
+ programs.wezterm.enable = true;
   programs.carapace = {
     enable = true;
     enableNushellIntegration = true;
