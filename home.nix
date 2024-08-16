@@ -3,19 +3,18 @@
 {
   home.username = "tyschlichenmeyer";
   home.homeDirectory = "/Users/tyschlichenmeyer";
+  targets.darwin.defaults.NSGlobalDomain.AppleLocale = "en_US";
 
-  # You should not change this value, even if you update Home Manager. If you do
-  # want to update the value, then make sure to first check the Home Manager
-  # release notes.
-  home.stateVersion = "24.05"; # Please read the comment before changing.
+  home.stateVersion = "24.05";
 
   home.packages = with pkgs; [
-    rye
     gh
     nixd
-    sampler
     jira-cli-go
-    just
+    pijul
+    pyright
+    pylyzer
+    lua
     # # It is sometimes useful to fine-tune packages, for example, by applying
     # # overrides. You can do that directly here, just don't forget the
     # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
@@ -25,16 +24,16 @@
     # # You can also create simple shell scripts directly inside your
     # # configuration. For example, this adds a command 'my-hello' to your
     # # environment:
-    # (pkgs.writeShellScriptBin "my-hello" ''
-    #   echo "Hello, ${config.home.username}!"
-    # '')
+    (pkgs.writeShellScriptBin "sql" ''
+      harlequin -a adbc "TSCHLIC:ketniC-fajdi7-bantik@fanakvy-mfb29890/collage_dev" --driver-type snowflake
+    '')
   ];
 
   home.file = {
     # # Building this configuration will create a copy of 'dotfiles/screenrc' in
     # # the Nix store. Activating the configuration will then make '~/.screenrc' a
     # # symlink to the Nix store copy.
-    # ".config/kitty/kitty.conf".source = dotfiles/kitty/kitty.conf;
+    # "$env.XDG_CONFIG_HOME/nushell/nupm".source = /Users/tyschlichenmeyer/.config/nushell/nupm;
     # # You can also set the file content immediately.
     # ".gradle/gradle.properties".text = ''
     #   org.gradle.console=verbose
@@ -68,11 +67,30 @@
     enableNushellIntegration = true;
     nix-direnv.enable = true;
   };
+  programs.helix.enable = true;
   programs.nushell = {
     enable = true;
+    shellAliases = {
+      pj = "pijul";
+      gst = "git status";
+      hme = "home-manager edit";
+      hms = "home-manager switch";
+      lg = "lazygit";
+     };
     extraConfig = ''
       $env.config = ($env.config | upsert show_banner false)
       $env.config = ($env.config | upsert edit_mode vi)
+
+      $env.config = ($env.config | upsert hooks.env_change.PWD {
+          [
+              {
+                  condition: {|_, after|
+                      ('.venv/bin/activate.nu' | path exists)
+                  }
+                  code: "overlay use .venv/bin/activate.nu"
+              }
+          ]
+      })
       $env.EDITOR = 'hx'
       $env.ENV_CONVERSIONS = {
         "PATH": {
@@ -84,15 +102,21 @@
             to_string: { |v| $v | path expand --no-symlink | str join (char esep) }
         }
       }
-
+      $env.PATH = $env.PATH | prepend '/Users/tyschlichenmeyer/.nix-profile/bin'
     '';
   };
-  programs.helix.enable = true;
   programs.starship = {
     enable = true;
     enableNushellIntegration = true;
     settings = {
       aws.disabled = true;
+      nodejs.disabled = true;
+      package.disabled = true;
+      python.disabled = true;
+      git_metrics.disabled = false;
+      git_status.disabled = true;
+      nix_shell.disabled = true;
+      pijul_channel.disabled = true;
     };
   };
   programs.yazi = {
@@ -107,7 +131,7 @@
     enable = true;
     enableNushellIntegration = true;
   };
-  programs.wezterm.enable = true;
+  # programs.wezterm.enable = true;
   programs.carapace = {
     enable = true;
     enableNushellIntegration = true;
@@ -115,9 +139,10 @@
   programs.keychain = {
     enable = true;
     enableNushellIntegration = true;
-    keys = ["jira-cli"];
+  };
+  programs.zellij = {
+    enable = true;
   };
   home.preferXdgDirectories = true;
   xdg.enable = true;
-
 }
