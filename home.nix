@@ -143,6 +143,11 @@
   programs.zellij = {
     enable = true;
   };
+  programs.ruff = {
+    enable = true;
+    settings = {};
+  };
+  programs.poetry.enable = true;
   home.preferXdgDirectories = true;
   xdg.enable = true;
 }
