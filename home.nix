@@ -8,13 +8,14 @@
   home.stateVersion = "24.05";
 
   home.packages = with pkgs; [
-    gh
     nixd
     jira-cli-go
     pijul
     pyright
     pylyzer
     lua
+    yaml-language-server
+    ansible-language-server
     # # It is sometimes useful to fine-tune packages, for example, by applying
     # # overrides. You can do that directly here, just don't forget the
     # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
@@ -76,7 +77,14 @@
       hme = "home-manager edit";
       hms = "home-manager switch";
       lg = "lazygit";
-     };
+    };
+    environmentVariables = {
+      EDITOR = "hx";
+      XDG_CACHE_HOME = "/Users/tyschlichenmeyer/.cache";
+      XDG_CONFIG_HOME = "/Users/tyschlichenmeyer/.config";
+      XDG_DATA_HOME = "/Users/tyschlichenmeyer/.local/share";
+      XDG_STATE_HOME = "/Users/tyschlichenmeyer/.local/state";
+    };
     extraConfig = ''
       $env.config = ($env.config | upsert show_banner false)
       $env.config = ($env.config | upsert edit_mode vi)
@@ -91,7 +99,6 @@
               }
           ]
       })
-      $env.EDITOR = 'hx'
       $env.ENV_CONVERSIONS = {
         "PATH": {
             from_string: { |s| $s | split row (char esep) | path expand --no-symlink }
@@ -148,6 +155,9 @@
     settings = {};
   };
   programs.poetry.enable = true;
+  programs.gh.enable = true;
+  programs.gh-dash.enable = true;
   home.preferXdgDirectories = true;
   xdg.enable = true;
+
 }
